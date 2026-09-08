@@ -1,175 +1,122 @@
 import 'package:flutter/material.dart';
-
+import 'package:tarea_2/Props/NumInpProps.dart';
+import 'package:tarea_2/Props/OpBtnProps.dart';
 import 'package:tarea_2/widgets/CustomInput.dart';
-import 'package:tarea_2/widgets/CustomText.dart';
+import 'package:tarea_2/widgets/NumberInput.dart';
 import 'package:tarea_2/widgets/OperationButton.dart';
-import 'package:tarea_2/widgets/ResetButton.dart';
+
 
 void main() {
   runApp(const MainApp());
 }
 
 class MainApp extends StatelessWidget {
+
   const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Calculator(),
-    );
-  }
-}
 
-class Calculator extends StatefulWidget {
-  const Calculator({super.key});
-  @override
-  State<Calculator> createState() => _CalculatorState();
-}
+    TextEditingController inputIzq = TextEditingController();
+    TextEditingController inputDer = TextEditingController();
+    TextEditingController inputRespuesta = TextEditingController();
+    FocusNode focusIzq = FocusNode();
+    FocusNode focusDer = FocusNode();
 
-class _CalculatorState extends State<Calculator> {
+    Opbtnprops actionProps = Opbtnprops(inputIzq: inputIzq, inputDer: inputDer, inputRespuesta: inputRespuesta);
+    Numinpprops numProps = Numinpprops(focusDer: focusDer, focusIzq: focusIzq, inputDer: inputDer, inputIzq: inputIzq);
 
-  final TextEditingController _numero1Controller = TextEditingController();
+    return MaterialApp(
+      home: Scaffold(
 
-  final TextEditingController _numero2Controller = TextEditingController();
-
-  String resultado = "";
-  String accion = "";
-
-  void actualizarResultado(String nuevoResultado, String nuevaAccion) {
-    setState(() {
-      resultado = nuevoResultado;
-      accion = nuevaAccion;
-    });
-  }
-
-  void resetearResultado() {
-    setState(() {
-      resultado = "";
-      accion = "";
-    });
-  }
-
-  @override
-  void dispose() {
-    _numero1Controller.dispose();
-    _numero2Controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-
-      appBar: AppBar(
-        title: const Text("Calculadora"),
+       appBar: AppBar(
+        title: const Text("Calculadora 2"),
         backgroundColor: Colors.deepPurpleAccent,
         foregroundColor: Colors.white,
         centerTitle: true,
-      ),
+       ),
 
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
 
-            const SizedBox(height: 30),
-
-            CustomText(
-              text: "Resultado: $resultado",
+            Row(
+              children: [
+                Expanded(child: Custominput(input: inputIzq, labelText: "Numero 1", focusNode: focusIzq,)),
+                const SizedBox(width: 16,),
+                Expanded(child: Custominput(input: inputDer, labelText: "Numero 2", focusNode: focusDer,))
+              ],
             ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 26,),
 
-            CustomText(
-              text: "Acción: $accion",
+            Center(
+              child: Custominput(input: inputRespuesta, labelText: "Respuesta", readOnly: true,),
             ),
 
-            const SizedBox(height: 30),
+            const SizedBox(height: 26,),
 
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-
-                  Row(
-                    children: [
-                      Expanded(
-                        child: CustomInput(
-                          label: "Num 1",
-                          controller: _numero1Controller,
-                        ),
-                      ),
-
-                      const SizedBox(width: 20),
-
-                      Expanded(
-                        child: CustomInput(
-                          label: "Num 2",
-                          controller: _numero2Controller,
-                        ),
-                      ),
-
-                    ],
-                  ),
-
-                  const SizedBox(height: 30),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-
-                      OperationButton(
-                        symbol: "+",
-                        numero1Controller: _numero1Controller,
-                        numero2Controller: _numero2Controller,
-                        onResultado: actualizarResultado,
-                      ),
-
-                      OperationButton(
-                        symbol: "-",
-                        numero1Controller: _numero1Controller,
-                        numero2Controller: _numero2Controller,
-                        onResultado: actualizarResultado,
-                      ),
-
-                      OperationButton(
-                        symbol: "*",
-                        numero1Controller: _numero1Controller,
-                        numero2Controller: _numero2Controller,
-                        onResultado: actualizarResultado,
-                      ),
-
-                      OperationButton(
-                        symbol: "/",
-                        numero1Controller: _numero1Controller,
-                        numero2Controller: _numero2Controller,
-                        onResultado: actualizarResultado,
-                      ),
-
-                    ],
-                  ),
-
-                  const SizedBox(height: 40),
-
-                  ResetButton(
-                    numero1Controller: _numero1Controller,
-                    numero2Controller: _numero2Controller,
-                    onReset: resetearResultado,
-                  ),
-
-                ],
-              ),
+            Row(
+              children: [
+                Expanded(child: Numberinput(props: numProps, labelNumber: "1",)),
+                const SizedBox(width: 16,),
+                Expanded(child: Numberinput(props: numProps, labelNumber: "2",)),
+                const SizedBox(width: 16,),
+                Expanded(child: Numberinput(props: numProps, labelNumber: "3",)),
+              ],
             ),
 
-            const SizedBox(height: 40),
-            
-            Image.network(
-              "https://i.pinimg.com/1200x/4c/5a/a3/4c5aa34e40c5819f2beae52020744d2d.jpg",
-              height: 300,
-              width: 300,
-              )
+            const SizedBox(height: 26,),
 
+            Row(
+              children: [
+                Expanded(child: Numberinput(props: numProps, labelNumber: "4",)),
+                const SizedBox(width: 16,),
+                Expanded(child: Numberinput(props: numProps, labelNumber: "5",)),
+                const SizedBox(width: 16,),
+                Expanded(child: Numberinput(props: numProps, labelNumber: "6",)),
+              ],
+            ),
+
+            const SizedBox(height: 26,),
+
+            Row(
+              children: [
+                Expanded(child: Numberinput(props: numProps, labelNumber: "7",)),
+                const SizedBox(width: 16,),
+                Expanded(child: Numberinput(props: numProps, labelNumber: "8",)),
+                const SizedBox(width: 16,),
+                Expanded(child: Numberinput(props: numProps, labelNumber: "9",)),
+              ],
+            ),
+
+            const SizedBox(height: 26,),
+
+            Center(child: Numberinput(props: numProps, labelNumber: "0",),),
+
+            const SizedBox(height: 26,),
+
+            Row(
+              children: [
+                Expanded(child: Operationbutton(props: actionProps, labelAction: "+")),
+                const SizedBox(width: 16,),
+                Expanded(child: Operationbutton(props: actionProps, labelAction: "-")),
+                const SizedBox(width: 16,),
+                Expanded(child: Operationbutton(props: actionProps, labelAction: "*")),
+                const SizedBox(width: 16,),
+                Expanded(child: Operationbutton(props: actionProps, labelAction: "/")),
+              ],
+            ),
+
+            const SizedBox(height: 26,),
+
+
+            Center(child: Operationbutton(props: actionProps, labelAction: "CLEAR"),)
           ],
         ),
+      ),
+        
       ),
     );
   }

@@ -1,51 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:tarea_2/Props/OpBtnProps.dart';
 
-class OperationButton extends StatelessWidget {
+class Operationbutton extends StatefulWidget{
 
-  final String symbol;
-  final TextEditingController numero1Controller;
-  final TextEditingController numero2Controller;
-  final Function(String resultado, String accion) onResultado;
+  final Opbtnprops props;
+  final String labelAction;
 
-  const OperationButton({
-    super.key,
-    required this.symbol,
-    required this.numero1Controller,
-    required this.numero2Controller,
-    required this.onResultado,
+  const Operationbutton({
+    super.key, 
+    required this.props,
+    required this.labelAction
   });
 
+  @override
+  State<Operationbutton> createState() => _Operationbutton();
+}
 
-  void calcular(BuildContext context) {
+class _Operationbutton extends State<Operationbutton> {
 
-    String textoNumero1 = numero1Controller.text.trim();
-    String textoNumero2 = numero2Controller.text.trim();
+  void setAction(){
 
-    if (textoNumero1.isEmpty || textoNumero2.isEmpty) {
+    if(widget.labelAction == "CLEAR"){
+      widget.props.inputIzq.text = "";
+      widget.props.inputDer.text = "";
+      widget.props.inputRespuesta.text = "";
+      return;
+    }
+    
+    if(widget.props.inputIzq.text.isEmpty || widget.props.inputDer.text.isEmpty){
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Por favor ingresa los dos números",),
+          content: Text("Ingrese los dos numeros"),
           backgroundColor: Colors.red,
-          duration: Duration(seconds: 3,),
+          duration: Duration(seconds: 3),
           behavior: SnackBarBehavior.floating,
-        ),
+        )
       );
       return;
     }
+    
+    double? number1 = double.tryParse(widget.props.inputIzq.text);
+    double? number2 = double.tryParse(widget.props.inputDer.text);
 
-    double? numero1 = double.tryParse(textoNumero1);
-
-    double? numero2 = double.tryParse(textoNumero2);
-
-    if (numero1 == null || numero2 == null) {
-
+    if(number1 == null || number2 == null){
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Ingresa valores numéricos válidos",),
+          content: Text("Ingrese numeros validos"),
           backgroundColor: Colors.red,
-          duration: Duration(seconds: 3,),
+          duration: Duration(seconds: 3),
           behavior: SnackBarBehavior.floating,
-        ),
+        )
       );
       return;
     }
@@ -53,66 +57,49 @@ class OperationButton extends StatelessWidget {
     double resultado = 0;
     String accion = "";
 
-    switch (symbol) {
 
+    switch (widget.labelAction){
       case "+":
-        resultado = numero1 + numero2;
+        resultado = number1+number2;
         accion = "Suma";
         break;
       case "-":
-        resultado = numero1 - numero2;
+        resultado = number1-number2;
         accion = "Resta";
         break;
-        
       case "*":
-        resultado = numero1 * numero2;
-        accion = "Multiplicación";
+        resultado = number1*number2;
+        accion = "Multi";
         break;
       case "/":
-
-        if (numero2 == 0) {
+        if (number2 == 0){
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text("No se puede dividir entre cero",),
+              content: Text("No se puede dividir entre 0"),
               backgroundColor: Colors.red,
-              duration: Duration(seconds: 3,),
+              duration: Duration(seconds: 3),
               behavior: SnackBarBehavior.floating,
-            ),
+            )
           );
           return;
         }
 
-        resultado = numero1 / numero2;
-        accion = "División";
+        resultado = number1/number2;
+        accion = "Divi";
         break;
     }
 
-    onResultado(resultado.toString(),accion,);
-
+    widget.props.inputRespuesta.text = "$resultado ($accion)";
+    
   }
-
 
   @override
   Widget build(BuildContext context) {
-
     return ElevatedButton(
-
-      onPressed: () {
-        calcular(context);
-      },
-
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.deepPurpleAccent,
-        foregroundColor: Colors.white,
-        minimumSize: const Size(55,55),
-      ),
-
+      onPressed: setAction, 
       child: Text(
-        symbol,
-        style: const TextStyle(
-          fontSize: 22,
-        ),
-      ),
+        widget.labelAction,
+      )
     );
   }
 }

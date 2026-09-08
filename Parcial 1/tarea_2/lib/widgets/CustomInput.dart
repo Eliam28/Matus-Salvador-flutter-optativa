@@ -1,31 +1,29 @@
 import 'package:flutter/material.dart';
 
-class CustomInput extends StatelessWidget {
+class Custominput extends StatefulWidget{
+  final TextEditingController input;
+  final String labelText;
+  final bool readOnly;
+  final FocusNode? focusNode;
 
-  final String label;
-  final TextEditingController controller;
+  const Custominput({super.key, required this.input, this.labelText = "", this.readOnly = false, this.focusNode});
 
-  const CustomInput({
-    super.key,
-    required this.label,
-    required this.controller,
-  });
+  @override
+  State<Custominput> createState() => _Custominput();
+}
+
+class _Custominput extends State<Custominput>{
 
   @override
   Widget build(BuildContext context) {
-
     return TextField(
-      controller: controller,
-
-      keyboardType: const TextInputType.numberWithOptions(
-        decimal: true,
-      ),
-
+      readOnly: widget.readOnly,
+      controller: widget.input,
+      focusNode: widget.focusNode,
       decoration: InputDecoration(
-        labelText: label,
         border: const OutlineInputBorder(),
+        labelText: widget.labelText,
       ),
-
     );
   }
 }
