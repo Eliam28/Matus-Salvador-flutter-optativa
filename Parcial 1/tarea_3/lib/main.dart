@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tarea_3/screens/calculatorScreen.dart';
+import 'package:tarea_3/screens/pantalla2Screen.dart';
+import 'package:tarea_3/screens/pantalla3Screen.dart';
 import 'package:tarea_3/themes/app_theme.dart';
 
 void main() {
@@ -52,15 +54,26 @@ class HomePage extends StatelessWidget {
 
               const SizedBox(height: 20),
 
+              
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Pantalla2())
+                  );
+                },
                 child: const Text("Pantalla 2"),
               ),
 
               const SizedBox(height: 20),
 
-              ElevatedButton(
-                onPressed: () {},
+                ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Pantalla3())
+                  );
+                },
                 child: const Text("Pantalla 3"),
               ),
             ],

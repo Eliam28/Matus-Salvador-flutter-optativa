@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tarea_3/props/NumInpProps.dart';
 import 'package:tarea_3/props/OpBtnProps.dart';
-import 'package:tarea_3/themes/app_theme.dart';
 import 'package:tarea_3/widgets/CustomInput.dart';
 import 'package:tarea_3/widgets/NumberInput.dart';
 import 'package:tarea_3/widgets/OperationButton.dart';
