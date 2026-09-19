@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tarea_3/screens/calculatorScreen.dart';
 import 'package:tarea_3/themes/app_theme.dart';
 
 void main() {
@@ -40,7 +41,12 @@ class HomePage extends StatelessWidget {
               const SizedBox(height: 20),
 
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Calculatorscreen())
+                  );
+                },
                 child: const Text("Calculadora"),
               ),
 
