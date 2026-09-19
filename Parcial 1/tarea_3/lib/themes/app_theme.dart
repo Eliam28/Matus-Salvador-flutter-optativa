@@ -17,7 +17,7 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.deepPurpleAccent,
           foregroundColor: Colors.white,
-          minimumSize: const Size(50, 200),
+          minimumSize: const Size(200, 50),
           textStyle: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold
