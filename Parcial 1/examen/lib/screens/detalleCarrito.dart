@@ -1,6 +1,8 @@
 import 'package:examen/api/dataCarritos.dart';
 import 'package:examen/api/dataProducts.dart';
 import 'package:examen/api/dataUsers.dart';
+import 'package:examen/widgets/ClienteCarrito.dart';
+import 'package:examen/widgets/ProductosCarrito.dart';
 import 'package:flutter/material.dart';
 
 class Detallecarrito extends StatelessWidget {
@@ -11,20 +13,6 @@ class Detallecarrito extends StatelessWidget {
     super.key,
     required this.idCarrito,
   });
-
-  Future<List<Map<String, dynamic>>> loadProductosCarrito(List<dynamic> productosCarrito,) async {
-
-    List<Map<String, dynamic>> productos = [];
-
-    for (var productoCarrito in productosCarrito) {
-
-      final producto = await fetchProductById(productoCarrito["productId"].toString(),);
-
-      productos.add(producto);
-    }
-
-    return productos;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +26,7 @@ class Detallecarrito extends StatelessWidget {
 
         builder: (context, snapshotCarrito) {
 
-          if (snapshotCarrito.connectionState ==ConnectionState.waiting) {
+          if (snapshotCarrito.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator(),);
           }
 
@@ -65,7 +53,8 @@ class Detallecarrito extends StatelessWidget {
 
               final List<dynamic> productosCarrito = carrito["products"];
 
-              return FutureBuilder<List<Map<String, dynamic>>>(future: loadProductosCarrito(productosCarrito,),
+              return FutureBuilder<List<dynamic>>(
+                future: fetchProductosCarrito(productosCarrito),
 
                 builder: (context, snapshotProductos) {
 
@@ -79,14 +68,6 @@ class Detallecarrito extends StatelessWidget {
 
                   final productos = snapshotProductos.data ?? [];
 
-                  double total = 0;
-
-                  for (int i = 0; i < productos.length; i++) {
-                    double precio = productos[i]["price"].toDouble();
-                    int cantidad = productosCarrito[i]["quantity"];
-                    total += precio * cantidad;
-                  }
-
                   return SingleChildScrollView(
                     padding: const EdgeInsets.all(15),
 
@@ -95,85 +76,11 @@ class Detallecarrito extends StatelessWidget {
 
                       children: [
 
-                        const Text(
-                          "Cliente",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-
-                        const SizedBox(height: 8),
-
-                        Text( "Nombre: ${usuario["name"]["firstname"]} ${usuario["name"]["lastname"]}",),
-
-                        const SizedBox(height: 5),
-
-                        Text("Correo: ${usuario["email"]}",),
+                        ClienteCarrito(usuario: usuario,),
 
                         const SizedBox(height: 25),
 
-                        const Text(
-                          "Productos",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-
-                        const SizedBox(height: 10),
-
-                        ListView.builder(
-                          shrinkWrap: true,
-
-                          physics:const NeverScrollableScrollPhysics(),
-
-                          itemCount: productos.length,
-
-                          itemBuilder: (context, index) {
-
-                            final producto = productos[index];
-
-                            final productoCarrito = productosCarrito[index];
-
-                            int cantidad = productoCarrito["quantity"];
-
-                            double precio = producto["price"].toDouble();
-
-                            double subtotal =  precio * cantidad;
-
-                            return ListTile(
-
-                              leading: Image.network(
-                                producto["image"],
-                                width: 60,
-                                height: 60,
-                                fit: BoxFit.contain,
-                              ),
-
-                              title: Text( producto["title"],),
-
-                              subtitle: Text( "\$${precio.toStringAsFixed(2)} x $cantidad",),
-
-                              trailing: Text("\$${subtotal.toStringAsFixed(2)}",),
-                            );
-                          },
-                        ),
-
-                        const SizedBox(height: 20),
-
-                        Align(
-                          alignment:
-                              Alignment.centerRight,
-
-                          child: Text(
-                            "Total: \$${total.toStringAsFixed(2)}",
-                            style: const TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                        ProductosCarrito(productos: productos,productosCarrito:productosCarrito,),
 
                       ],
                     ),

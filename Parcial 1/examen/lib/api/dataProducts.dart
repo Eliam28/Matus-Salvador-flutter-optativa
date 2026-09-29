@@ -20,3 +20,17 @@ Future<dynamic> fetchProductById(String id) async {
 
   throw Exception("Error al cargar el producto");
 }
+
+Future<List<dynamic>> fetchProductosCarrito(List<dynamic> productosCarrito,) async {
+
+  List<dynamic> productos = [];
+
+  for (var productoCarrito in productosCarrito) {
+
+    final producto = await fetchProductById(productoCarrito["productId"].toString(),);
+
+    productos.add(producto);
+  }
+
+  return productos;
+}
