@@ -1,9 +1,10 @@
-import 'dart:convert';
-
+import 'package:examen/api/dataCarritos.dart';
+import 'package:examen/api/dataProducts.dart';
+import 'package:examen/api/dataUsers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class Detallecarrito extends StatelessWidget {
+
   final int idCarrito;
 
   const Detallecarrito({
@@ -11,45 +12,33 @@ class Detallecarrito extends StatelessWidget {
     required this.idCarrito,
   });
 
-  Future<Map<String, dynamic>> loadCarrito() async {
-    final String response = await rootBundle.loadString('lib/api/dataCarrito.json');
+  Future<List<Map<String, dynamic>>> loadProductosCarrito(List<dynamic> productosCarrito,) async {
 
-    final List<dynamic> carritos = jsonDecode(response);
+    List<Map<String, dynamic>> productos = [];
 
-    final carrito = carritos.firstWhere((carrito) => carrito["id"] == idCarrito,);
+    for (var productoCarrito in productosCarrito) {
 
-    return carrito;
-  }
+      final producto = await fetchProductById(productoCarrito["productId"].toString(),);
 
-  Future<Map<String, dynamic>> loadUsuario(int userId) async {
-    final String response = await rootBundle.loadString('lib/api/dataUser.json');
-
-    final List<dynamic> usuarios = jsonDecode(response);
-
-    final usuario = usuarios.firstWhere((usuario) => usuario["id"] == userId,);
-
-    return usuario;
-  }
-
-  Future<List<dynamic>> loadProductos() async {
-    final String response = await rootBundle.loadString('lib/api/dataProducts.json');
-
-    final List<dynamic> productos = jsonDecode(response);
+      productos.add(producto);
+    }
 
     return productos;
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      
+
       appBar: AppBar(title: Text("Carrito #$idCarrito"),),
 
-      body: FutureBuilder<Map<String, dynamic>>(
-        future: loadCarrito(),
+      body: FutureBuilder<dynamic>(
+        future: fetchCarritoById(idCarrito.toString(),),
 
         builder: (context, snapshotCarrito) {
-          if (snapshotCarrito.connectionState == ConnectionState.waiting) {
+
+          if (snapshotCarrito.connectionState ==ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator(),);
           }
 
@@ -59,10 +48,11 @@ class Detallecarrito extends StatelessWidget {
 
           final carrito = snapshotCarrito.data!;
 
-          return FutureBuilder<Map<String, dynamic>>(
-            future: loadUsuario(carrito["userId"]),
+          return FutureBuilder<dynamic>(
+            future: fetchUserById(carrito["userId"].toString(),),
 
             builder: (context, snapshotUsuario) {
+
               if (snapshotUsuario.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator(),);
               }
@@ -73,127 +63,122 @@ class Detallecarrito extends StatelessWidget {
 
               final usuario = snapshotUsuario.data!;
 
-              return SingleChildScrollView(
-                padding: const EdgeInsets.all(15),
+              final List<dynamic> productosCarrito = carrito["products"];
 
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              return FutureBuilder<List<Map<String, dynamic>>>(future: loadProductosCarrito(productosCarrito,),
 
-                  children: [
-                    const Text(
-                      "Cliente",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                builder: (context, snapshotProductos) {
 
-                    const SizedBox(height: 8),
+                  if (snapshotProductos.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator(),);
+                  }
 
-                    Text("Nombre: ${usuario["name"]["firstname"]} ${usuario["name"]["lastname"]}",),
+                  if (snapshotProductos.hasError) {
+                    return Center(child: Text("Error: ${snapshotProductos.error}",),);
+                  }
 
-                    const SizedBox(height: 5),
+                  final productos = snapshotProductos.data ?? [];
 
-                    Text("Correo: ${usuario["email"]}",),
+                  double total = 0;
 
-                    const SizedBox(height: 25),
+                  for (int i = 0; i < productos.length; i++) {
+                    double precio = productos[i]["price"].toDouble();
+                    int cantidad = productosCarrito[i]["quantity"];
+                    total += precio * cantidad;
+                  }
 
-                    const Text(
-                      "Productos",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  return SingleChildScrollView(
+                    padding: const EdgeInsets.all(15),
 
-                    const SizedBox(height: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
 
-                    FutureBuilder<List<dynamic>>(
-                      future: loadProductos(),
+                      children: [
 
-                      builder: (context, snapshotProductos) {
-                        if (snapshotProductos.connectionState ==ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator(),);
-                        }
+                        const Text(
+                          "Cliente",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
 
-                        if (snapshotProductos.hasError) {
-                          return Center(child: Text("Error: ${snapshotProductos.error}",),);
-                        }
+                        const SizedBox(height: 8),
 
-                        final productos = snapshotProductos.data ?? [];
-                        final productosCarrito = carrito["products"];
+                        Text( "Nombre: ${usuario["name"]["firstname"]} ${usuario["name"]["lastname"]}",),
 
-                        double total = 0;
+                        const SizedBox(height: 5),
 
-                        for (var productoCarrito in productosCarrito) {
-                          final producto = productos.firstWhere(
-                            (producto) => producto["id"] ==productoCarrito["productId"],
-                          );
+                        Text("Correo: ${usuario["email"]}",),
 
-                          double precio = producto["price"].toDouble();
+                        const SizedBox(height: 25),
 
-                          int cantidad =productoCarrito["quantity"];
+                        const Text(
+                          "Productos",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
 
-                          total += precio * cantidad;
-                        }
+                        const SizedBox(height: 10),
 
-                        return Column(
-                          children: [
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
+                        ListView.builder(
+                          shrinkWrap: true,
 
-                              itemCount: productosCarrito.length,
+                          physics:const NeverScrollableScrollPhysics(),
 
-                              itemBuilder: (context, index) {
-                                final productoCarrito = productosCarrito[index];
+                          itemCount: productos.length,
 
-                                final producto = productos.firstWhere(
-                                  (producto) => producto["id"] == productoCarrito["productId"],
-                                );
+                          itemBuilder: (context, index) {
 
-                                int cantidad = productoCarrito["quantity"];
+                            final producto = productos[index];
 
-                                double precio = producto["price"].toDouble();
+                            final productoCarrito = productosCarrito[index];
 
-                                double subtotal = precio * cantidad;
+                            int cantidad = productoCarrito["quantity"];
 
-                                return ListTile(
-                                  leading: Image.network(
-                                    producto["image"],
-                                    width: 60,
-                                    height: 60,
-                                    fit: BoxFit.contain,
-                                  ),
+                            double precio = producto["price"].toDouble();
 
-                                  title: Text(producto["title"],),
+                            double subtotal =  precio * cantidad;
 
-                                  subtitle: Text("\$${precio.toStringAsFixed(2)} x $cantidad",),
+                            return ListTile(
 
-                                  trailing: Text("\$${subtotal.toStringAsFixed(2)}",),
-                                );
-                              },
-                            ),
-
-                            const SizedBox(height: 20),
-
-                            Align(
-                              alignment: Alignment.centerRight,
-
-                              child: Text(
-                                "Total: \$${total.toStringAsFixed(2)}",
-                                style: const TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              leading: Image.network(
+                                producto["image"],
+                                width: 60,
+                                height: 60,
+                                fit: BoxFit.contain,
                               ),
+
+                              title: Text( producto["title"],),
+
+                              subtitle: Text( "\$${precio.toStringAsFixed(2)} x $cantidad",),
+
+                              trailing: Text("\$${subtotal.toStringAsFixed(2)}",),
+                            );
+                          },
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        Align(
+                          alignment:
+                              Alignment.centerRight,
+
+                          child: Text(
+                            "Total: \$${total.toStringAsFixed(2)}",
+                            style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
                             ),
-                          ],
-                        );
-                      },
+                          ),
+                        ),
+
+                      ],
                     ),
-                  ],
-                ),
+                  );
+                },
               );
             },
           );

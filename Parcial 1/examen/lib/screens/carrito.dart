@@ -1,27 +1,19 @@
-import 'dart:convert';
-
+import 'package:examen/api/dataCarritos.dart';
 import 'package:examen/screens/detalleCarrito.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 
 class Carritoscreen extends StatelessWidget{
   const Carritoscreen({super.key});
 
-  Future<List<dynamic>> loadcarritos() async {
-    final String response = await rootBundle.loadString('lib/api/dataCarrito.json');
-
-    final List<dynamic> data = jsonDecode(response);
-
-    return data;
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title:Text("Carrito de compra")),
+      appBar: AppBar(title:Text("Carritos de compra")),
 
       body: FutureBuilder<List<dynamic>>(
-        future: loadcarritos(),
+        future: fetchCarritos(),
 
         builder: (context, snapshot) {
 
@@ -62,7 +54,7 @@ class Carritoscreen extends StatelessWidget{
 
                title: Text("Carrito - ${carrito["id"]}",),
 
-                subtitle: Text("Clik para ver detalles",),
+                subtitle: Text("Click para ver detalles",),
               );
             },
           );

@@ -1,8 +1,6 @@
-import 'dart:convert';
-
+import 'package:examen/api/dataProducts.dart';
 import 'package:examen/widgets/BotonProducto.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class Detalleproducto extends StatelessWidget {
 
@@ -13,17 +11,6 @@ class Detalleproducto extends StatelessWidget {
     required this.id,
   });
 
-  Future<Map<String, dynamic>> loadProducto() async {
-
-    final String response = await rootBundle.loadString('lib/api/dataProducts.json');
-
-    final List<dynamic> productos = jsonDecode(response);
-
-    final producto = productos.firstWhere((producto) => producto["id"] == id,);
-
-    return producto;
-  }
-
   @override
   Widget build(BuildContext context) {
 
@@ -31,9 +18,9 @@ class Detalleproducto extends StatelessWidget {
 
       appBar: AppBar(title: const Text("Detalle del producto"),),
 
-      body: FutureBuilder<Map<String, dynamic>>(
+      body: FutureBuilder<dynamic>(
 
-        future: loadProducto(),
+        future: fetchProductById(id.toString()),
 
         builder: (context, snapshot) {
 

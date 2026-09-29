@@ -1,8 +1,7 @@
-import 'dart:convert';
 
+import 'package:examen/api/dataUsers.dart';
 import 'package:examen/widgets/MyBottomNavigatorBar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -16,20 +15,7 @@ class _LoginState extends State<Login> {
   final TextEditingController usuarioController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  Future<List<dynamic>> loadUsers() async {
-
-    final String response = await rootBundle.loadString('lib/api/dataUser.json');
-
-    final List<dynamic> users = jsonDecode(response);
-
-    return users;
-  }
-
   Future<void> login() async {
-
-    final users = await loadUsers();
-
-    if (!mounted) return;
 
     String usuarioIngresado = usuarioController.text.trim();
     String passwordIngresado = passwordController.text.trim();
@@ -48,29 +34,22 @@ class _LoginState extends State<Login> {
       return;
     }
 
-    bool usuarioEncontrado = false;
+    try {
 
-    for (var user in users) {
+      final usuario = await loginUser(usuarioIngresado,passwordIngresado);
 
-      String username = user["username"];
-      String email = user["email"];
-      String password = user["password"];
+      if (!mounted) return;
 
-      if ((usuarioIngresado == username || usuarioIngresado == email) && passwordIngresado == password) {
-        usuarioEncontrado = true;
-        break;
-      }
-    }
+      print(usuario);
 
-    if (usuarioEncontrado) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (context) => const MyBottomNavigatorBar(),
-        ),
+        MaterialPageRoute(builder: (context) => const MyBottomNavigatorBar()),
       );
 
-    } else {
+    } catch (error) {
+
+      if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -82,6 +61,7 @@ class _LoginState extends State<Login> {
       );
     }
   }
+
 
   @override
   void dispose() {
@@ -135,7 +115,7 @@ class _LoginState extends State<Login> {
               TextField(
                 controller: usuarioController,
                 decoration: const InputDecoration(
-                  hintText: "Usuario / Correo",
+                  hintText: "Usuario",
                   border: OutlineInputBorder(),
                 ),
               ),

@@ -1,19 +1,9 @@
-import 'dart:convert';
-
+import 'package:examen/api/dataProducts.dart';
 import 'package:examen/screens/detalleProducto.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class Products extends StatelessWidget {
   const Products({super.key});
-
-  Future<List<dynamic>> loadProducts() async {
-    final String response = await rootBundle.loadString('lib/api/dataProducts.json');
-
-    final List<dynamic> data = jsonDecode(response);
-
-    return data;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +11,7 @@ class Products extends StatelessWidget {
       appBar: AppBar(title: const Text("Productos"),),
 
       body: FutureBuilder<List<dynamic>>(
-        future: loadProducts(),
+        future: fetchProducts(),
 
         builder: (context, snapshot) {
 
