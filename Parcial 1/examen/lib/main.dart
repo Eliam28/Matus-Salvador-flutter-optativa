@@ -1,5 +1,5 @@
 import 'package:examen/themes/app_theme.dart';
-import 'package:examen/widgets/login.dart';
+import 'package:examen/screens/login.dart';
 import 'package:flutter/material.dart';
 
 void main() {

@@ -1,7 +1,10 @@
+import 'package:examen/widgets/MyBottomNavigatorBar.dart';
 import 'package:flutter/material.dart';
 
 class Login extends StatelessWidget {
   const Login({super.key});
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -16,13 +19,13 @@ class Login extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
 
-              const SizedBox(height: 350),
+              const SizedBox(height: 250),
 
               const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
 
-                  Icon(Icons.storefront,size: 45,color: Colors.lightBlue,),
+                  Icon(Icons.storefront,size: 45),
 
                   SizedBox(width: 12),
 
@@ -31,7 +34,6 @@ class Login extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
-                      color: Colors.lightBlue,
                     ),
                   ),
 
@@ -59,7 +61,13 @@ class Login extends StatelessWidget {
               const SizedBox(height: 35),
 
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushReplacement(context,
+                    MaterialPageRoute(
+                      builder: (context) => const MyBottomNavigatorBar(),
+                    ),
+                  );
+                },
                 child: const Text("Aceptar"),
               ),
 
