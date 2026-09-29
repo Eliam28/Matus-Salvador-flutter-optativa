@@ -1,0 +1,68 @@
+[
+  {
+    "id": 1,
+    "email": "eliam@gmail.com",
+    "username": "eliam",
+    "password": "eli123",
+    "name": {
+      "firstname": "Eliam",
+      "lastname": "Matus"
+    },
+    "address": {
+      "city": "Merida",
+      "street": "Calle 1",
+      "number": 100,
+      "zipcode": "97000",
+      "geolocation": {
+        "lat": "20.9674",
+        "long": "-89.5926"
+      }
+    },
+    "phone": "999-111-1111",
+    "__v": 0
+  },
+  {
+    "id": 2,
+    "email": "juan@gmail.com",
+    "username": "juan",
+    "password": "juan123",
+    "name": {
+      "firstname": "Juan",
+      "lastname": "Cervantes"
+    },
+    "address": {
+      "city": "Merida",
+      "street": "Calle 2",
+      "number": 200,
+      "zipcode": "97000",
+      "geolocation": {
+        "lat": "20.9674",
+        "long": "-89.5926"
+      }
+    },
+    "phone": "999-222-2222",
+    "__v": 0
+  },
+  {
+    "id": 3,
+    "email": "kevin@gmail.com",
+    "username": "kevin",
+    "password": "kevin123",
+    "name": {
+      "firstname": "Kevin",
+      "lastname": "Garabita"
+    },
+    "address": {
+      "city": "Merida",
+      "street": "Calle 3",
+      "number": 300,
+      "zipcode": "97000",
+      "geolocation": {
+        "lat": "20.9674",
+        "long": "-89.5926"
+      }
+    },
+    "phone": "999-333-3333",
+    "__v": 0
+  }
+]

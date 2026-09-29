@@ -1,4 +1,4 @@
-import 'package:examen/screens/carritoScreen.dart';
+import 'package:examen/screens/carrito.dart';
 import 'package:examen/screens/products.dart';
 import 'package:flutter/material.dart';
 

@@ -20,3 +20,4 @@ flutter:
   assets:
     - lib/api/dataProducts.json
     - lib/api/dataCarrito.json
+    - lib/api/dataUser.json

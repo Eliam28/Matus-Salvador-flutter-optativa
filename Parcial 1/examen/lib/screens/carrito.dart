@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:examen/screens/detalleCarrito.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -35,7 +36,7 @@ class Carritoscreen extends StatelessWidget{
           final carritos = snapshot.data ?? [];
 
           return ListView.builder(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(5),
             itemCount: carritos.length,
 
             itemBuilder: (context, index) {
@@ -43,20 +44,25 @@ class Carritoscreen extends StatelessWidget{
               final carrito = carritos[index];
 
               return ListTile(
+                minTileHeight: 80,
+
+                onTap: () {
+                  Navigator.push(
+                    context, 
+                    MaterialPageRoute(builder: (context)=> Detallecarrito(idCarrito:carrito["id"] ,))
+                  );
+                },
+
                 leading: Image.network(
-                  "https://cdn5.coppel.com/pm/5660233-1.jpg?iresize=width:846,height:677",
+                  "https://img.pikbest.com/wp/202413/outline-sketch-shopping-cart-coloring-page-vector-illustration-drawing_10473014.jpg!bw800",
                   width: 60,
                   height: 60,
                   fit: BoxFit.contain,
                 ),
 
-               title: Text(
-                  "Cliente - ${carrito["userId"]}",
-                ),
+               title: Text("Carrito - ${carrito["id"]}",),
 
-                subtitle: Text(
-                  "Clik para ver detalles",
-                ),
+                subtitle: Text("Clik para ver detalles",),
               );
             },
           );
