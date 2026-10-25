@@ -1,6 +1,9 @@
 import 'package:examen/Login/LoginService.dart';
 import 'package:examen/Products/ProductsService.dart';
+import 'package:examen/cart_by_id/CartByIdService.dart';
+import 'package:examen/carts/CartsService.dart';
 import 'package:examen/product_by_id/ProductByIdService.dart';
+import 'package:examen/user_by_id/UserByIdService.dart';
 import 'package:examen/widgets/MyBottomNavigatorBar.dart';
 import 'package:flutter/material.dart';
 
@@ -8,12 +11,18 @@ class LoginForm extends StatefulWidget {
   final LoginService loginService;
   final ProductsService productsService;
   final ProductByIdService productByIdService;
+  final CartsService cartsService;
+  final CartByIdService cartByIdService;
+  final UserByIdService userByIdService;
 
   const LoginForm({
     super.key,
     required this.loginService,
     required this.productsService,
     required this.productByIdService,
+    required this.cartsService,
+    required this.cartByIdService,
+    required this.userByIdService,
   });
 
   @override
@@ -32,6 +41,9 @@ class _LoginFormState extends State<LoginForm> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Ingrese ambos campos"),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+          behavior: SnackBarBehavior.floating,
         ),
       );
 
@@ -52,6 +64,9 @@ class _LoginFormState extends State<LoginForm> {
           builder: (context) => MyBottomNavigatorBar(
             productsService: widget.productsService,
             productByIdService: widget.productByIdService,
+            cartsService: widget.cartsService,
+            cartByIdService: widget.cartByIdService,
+            userByIdService: widget.userByIdService,
           ),
         ),
       );
@@ -61,6 +76,9 @@ class _LoginFormState extends State<LoginForm> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Usuario o contraseña incorrectos"),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+          behavior: SnackBarBehavior.floating,
         ),
       );
     }

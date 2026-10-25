@@ -1,8 +1,8 @@
+import 'package:examen/user_by_id/User.dart';
 import 'package:flutter/material.dart';
 
 class ClienteCarrito extends StatelessWidget {
-
-  final dynamic usuario;
+  final User usuario;
 
   const ClienteCarrito({
     super.key,
@@ -11,12 +11,10 @@ class ClienteCarrito extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
 
       children: [
-
         const Text(
           "Cliente",
           style: TextStyle(
@@ -27,12 +25,15 @@ class ClienteCarrito extends StatelessWidget {
 
         const SizedBox(height: 8),
 
-        Text( "Nombre: ${usuario["name"]["firstname"]} ${usuario["name"]["lastname"]}",),
+        Text(
+          "Nombre: ${usuario.name.firstname} ${usuario.name.lastname}",
+        ),
 
         const SizedBox(height: 5),
 
-        Text("Correo: ${usuario["email"]}",),
-
+        Text(
+          "Correo: ${usuario.email}",
+        ),
       ],
     );
   }
