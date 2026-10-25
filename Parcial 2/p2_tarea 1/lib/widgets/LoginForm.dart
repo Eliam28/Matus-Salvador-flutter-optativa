@@ -1,34 +1,37 @@
-import 'package:examen/api/dataUsers.dart';
+import 'package:examen/Login/LoginService.dart';
+import 'package:examen/Products/ProductsService.dart';
+import 'package:examen/product_by_id/ProductByIdService.dart';
 import 'package:examen/widgets/MyBottomNavigatorBar.dart';
 import 'package:flutter/material.dart';
 
 class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+  final LoginService loginService;
+  final ProductsService productsService;
+  final ProductByIdService productByIdService;
+
+  const LoginForm({
+    super.key,
+    required this.loginService,
+    required this.productsService,
+    required this.productByIdService,
+  });
 
   @override
   State<LoginForm> createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm> {
-
   final TextEditingController usuarioController = TextEditingController();
-
   final TextEditingController passwordController = TextEditingController();
 
   Future<void> login() async {
+    final username = usuarioController.text.trim();
+    final password = passwordController.text.trim();
 
-    String usuarioIngresado = usuarioController.text.trim();
-
-    String passwordIngresado = passwordController.text.trim();
-
-    if (usuarioIngresado.isEmpty || passwordIngresado.isEmpty) {
-
+    if (username.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Ingrese ambos campos"),
-          backgroundColor: Colors.red,
-          duration: Duration(seconds: 3),
-          behavior: SnackBarBehavior.floating,
         ),
       );
 
@@ -36,31 +39,28 @@ class _LoginFormState extends State<LoginForm> {
     }
 
     try {
-
-      await loginUser(usuarioIngresado, passwordIngresado,);
+      await widget.loginService.login(
+        username,
+        password,
+      );
 
       if (!mounted) return;
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              const MyBottomNavigatorBar(),
+          builder: (context) => MyBottomNavigatorBar(
+            productsService: widget.productsService,
+            productByIdService: widget.productByIdService,
+          ),
         ),
       );
-
-    } catch (error) {
-
+    } catch (e) {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text(
-            "Usuario o contraseña incorrectos",
-          ),
-          backgroundColor: Colors.red,
-          duration: Duration(seconds: 3),
-          behavior: SnackBarBehavior.floating,
+          content: Text("Usuario o contraseña incorrectos"),
         ),
       );
     }
@@ -75,15 +75,12 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: [
-
         TextField(
           controller: usuarioController,
           decoration: const InputDecoration(
             hintText: "Usuario",
-            border: OutlineInputBorder(),
           ),
         ),
 
@@ -93,7 +90,6 @@ class _LoginFormState extends State<LoginForm> {
           controller: passwordController,
           decoration: const InputDecoration(
             hintText: "Contraseña",
-            border: OutlineInputBorder(),
           ),
         ),
 
@@ -103,7 +99,6 @@ class _LoginFormState extends State<LoginForm> {
           onPressed: login,
           child: const Text("Aceptar"),
         ),
-
       ],
     );
   }

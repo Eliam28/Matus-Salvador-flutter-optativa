@@ -1,8 +1,20 @@
+import 'package:examen/Login/LoginService.dart';
+import 'package:examen/Products/ProductsService.dart';
+import 'package:examen/product_by_id/ProductByIdService.dart';
 import 'package:examen/widgets/LoginForm.dart';
 import 'package:flutter/material.dart';
 
-class Login extends StatelessWidget {
-  const Login({super.key});
+class LoginScreen extends StatelessWidget {
+  final LoginService loginService;
+  final ProductsService productsService;
+  final ProductByIdService productByIdService;
+
+  const LoginScreen({
+    super.key,
+    required this.loginService,
+    required this.productsService,
+    required this.productByIdService,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,13 +28,11 @@ class Login extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-
               const SizedBox(height: 250),
 
               const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-
                   Icon(
                     Icons.storefront,
                     size: 45,
@@ -35,7 +45,6 @@ class Login extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
-                      color: Colors.lightBlue
                     ),
                   ),
                 ],
@@ -43,7 +52,11 @@ class Login extends StatelessWidget {
 
               const SizedBox(height: 30),
 
-              const LoginForm(),
+              LoginForm(
+                loginService: loginService,
+                productsService: productsService,
+                productByIdService: productByIdService,
+              ),
             ],
           ),
         ),
